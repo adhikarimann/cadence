@@ -1,0 +1,88 @@
+<svg width="900" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="900" height="800" fill="#0f172a"/>
+  
+  <!-- Title -->
+  <text x="450" y="30" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle">
+    Behavioral Anomalies Detection - System Architecture
+  </text>
+  
+  <!-- Step 1: Login Event -->
+  <rect x="350" y="60" width="200" height="60" rx="10" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="95" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">1. LOGIN EVENT</text>
+  
+  <!-- Arrow 1 -->
+  <line x1="450" y1="120" x2="450" y2="150" stroke="#fff" stroke-width="2"/>
+  <polygon points="450,160 445,150 455,150" fill="#fff"/>
+  
+  <!-- Step 2: Extract Data -->
+  <rect x="320" y="150" width="260" height="60" rx="10" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="185" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">2. EXTRACT LOGIN DATA</text>
+  <text x="450" y="202" font-size="12" fill="#e0e7ff" text-anchor="middle">(time, device, location)</text>
+  
+  <!-- Arrow 2 -->
+  <line x1="450" y1="210" x2="450" y2="240" stroke="#fff" stroke-width="2"/>
+  <polygon points="450,250 445,240 455,240" fill="#fff"/>
+  
+  <!-- Step 3: Fetch Baseline -->
+  <rect x="320" y="240" width="260" height="60" rx="10" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="275" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">3. FETCH USER BASELINE</text>
+  <text x="450" y="292" font-size="12" fill="#e0e7ff" text-anchor="middle">(30-day profile from database)</text>
+  
+  <!-- Arrow 3 -->
+  <line x1="450" y1="300" x2="450" y2="330" stroke="#fff" stroke-width="2"/>
+  <polygon points="450,340 445,330 455,330" fill="#fff"/>
+  
+  <!-- Step 4: Calculate Risk Score -->
+  <rect x="280" y="330" width="340" height="100" rx="10" fill="#dc2626" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="360" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">4. CALCULATE RISK SCORE (0-100)</text>
+  <text x="450" y="380" font-size="11" fill="#fee2e2" text-anchor="middle">• Time Anomaly (0-30 pts)  • Device Anomaly (0-25 pts)</text>
+  <text x="450" y="397" font-size="11" fill="#fee2e2" text-anchor="middle">• Location Anomaly (0-25 pts)  • Velocity Check (0-20 pts)</text>
+  
+  <!-- Arrow 4 -->
+  <line x1="450" y1="430" x2="450" y2="460" stroke="#fff" stroke-width="2"/>
+  <polygon points="450,470 445,460 455,460" fill="#fff"/>
+  
+  <!-- Step 5: Decision Split -->
+  <circle cx="450" cy="490" r="25" fill="#10b981" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="498" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">DECIDE</text>
+  
+  <!-- Branch 1: ALLOW (Risk < 30) -->
+  <line x1="400" y1="515" x2="280" y2="560" stroke="#10b981" stroke-width="2"/>
+  <polygon points="270,565 280,560 275,572" fill="#10b981"/>
+  
+  <rect x="150" y="560" width="260" height="80" rx="10" fill="#059669" stroke="#10b981" stroke-width="2"/>
+  <text x="280" y="590" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">✓ ALLOW</text>
+  <text x="280" y="610" font-size="12" fill="#d1fae5" text-anchor="middle">(Risk &lt; 30)</text>
+  <text x="280" y="628" font-size="11" fill="#d1fae5" text-anchor="middle">Grant seamless access</text>
+  
+  <!-- Branch 2: CHALLENGE (Risk 30-70) -->
+  <line x1="450" y1="515" x2="450" y2="560" stroke="#f59e0b" stroke-width="2"/>
+  <polygon points="450,570 445,560 455,560" fill="#f59e0b"/>
+  
+  <rect x="320" y="560" width="260" height="80" rx="10" fill="#b45309" stroke="#f59e0b" stroke-width="2"/>
+  <text x="450" y="590" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">⚠ CHALLENGE</text>
+  <text x="450" y="610" font-size="12" fill="#fef3c7" text-anchor="middle">(Risk 30-70)</text>
+  <text x="450" y="628" font-size="11" fill="#fef3c7" text-anchor="middle">Request OTP/Security Q</text>
+  
+  <!-- Branch 3: BLOCK (Risk > 70) -->
+  <line x1="500" y1="515" x2="620" y2="560" stroke="#dc2626" stroke-width="2"/>
+  <polygon points="630,565 620,560 625,572" fill="#dc2626"/>
+  
+  <rect x="490" y="560" width="260" height="80" rx="10" fill="#991b1b" stroke="#dc2626" stroke-width="2"/>
+  <text x="620" y="590" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">✗ BLOCK</text>
+  <text x="620" y="610" font-size="12" fill="#fee2e2" text-anchor="middle">(Risk &gt; 70)</text>
+  <text x="620" y="628" font-size="11" fill="#fee2e2" text-anchor="middle">Block &amp; alert user</text>
+  
+  <!-- Arrow 5: Log & Update -->
+  <line x1="280" y1="640" x2="350" y2="700" stroke="#fff" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="450" y1="640" x2="450" y2="700" stroke="#fff" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="620" y1="640" x2="550" y2="700" stroke="#fff" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Step 6: Log & Update Baseline -->
+  <rect x="300" y="700" width="300" height="60" rx="10" fill="#6366f1" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="735" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">6. LOG EVENT &amp; UPDATE BASELINE</text>
+  
+  <!-- Legend -->
+  <text x="20" y="780" font-size="10" fill="#9ca3af">PSB Hackathon 2026 | Behavioral Anomalies Detection</text>
+</svg>
