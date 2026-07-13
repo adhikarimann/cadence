@@ -1,4 +1,4 @@
-# 🔐 Behavioral Trust Validator
+# 🔐 Cadence
 
 A simple Streamlit application that detects suspicious login attempts using user behaviour.
 
@@ -33,11 +33,11 @@ Run the app:
 streamlit run app.py
 ```
 
-## Team
+## By
 
-**AI Did It!**  
+**Manmohan Adhikari**  
 IIT (ISM) Dhanbad
 
 ---
 
-PSB Hackathon 2026
+ThinkForBharat 1.0 - National Open Innovation Ideathon

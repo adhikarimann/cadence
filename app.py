@@ -1,9 +1,15 @@
-
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(page_title="Behavioral Trust Validator", page_icon="🔐", layout="wide")
+st.set_page_config(
+    page_title="Cadence",
+    page_icon="🛡️",
+    layout="wide"
+)
 
+# -----------------------------
+# Sample Behaviour Profiles
+# -----------------------------
 users = {
     "User 1": {
         "hours": [8,9,10,14,15,18,19,20],
@@ -22,6 +28,9 @@ users = {
     }
 }
 
+# -----------------------------
+# Risk Scoring Engine
+# -----------------------------
 def check(user, hour, device, location, velocity):
     score = 0
     reasons = []
@@ -29,13 +38,16 @@ def check(user, hour, device, location, velocity):
 
     if hour not in data["hours"]:
         score += 30
-        reasons.append("⏰ Login time is unusual (+30)")
+        reasons.append("⏰ Unusual login time (+30)")
+
     if device not in data["devices"]:
         score += 25
         reasons.append("📱 New device detected (+25)")
+
     if location not in data["locations"]:
         score += 25
-        reasons.append("📍 New location detected (+25)")
+        reasons.append("📍 Unfamiliar location (+25)")
+
     if velocity:
         score += 20
         reasons.append("⚡ Impossible travel detected (+20)")
@@ -44,114 +56,239 @@ def check(user, hour, device, location, velocity):
         return score, "✅ ALLOW", "Low Risk", reasons
     elif score < 70:
         return score, "⚠️ CHALLENGE", "Medium Risk", reasons
-    return score, "❌ BLOCK", "High Risk", reasons
+    else:
+        return score, "❌ BLOCK", "High Risk", reasons
 
-st.title("🔐 Behavioral Trust Validator")
-st.write("Detect suspicious login attempts using simple behavioural analysis.")
+# -----------------------------
+# Header
+# -----------------------------
+st.title("🛡️ Cadence")
+st.caption("Powered by Behavioral Trust Validator™")
 
-mode = st.sidebar.radio(
-    "Navigation",
-    ["🧪 Demo Scenarios", "🔍 Custom Login Test", "📘 System Overview"]
+st.write(
+    "Continuous behavioral intelligence for fraud prevention. "
+    "This MVP demonstrates how behavioral signals can be used to evaluate "
+    "session trust and detect suspicious login attempts."
 )
 
+# -----------------------------
+# Sidebar
+# -----------------------------
+mode = st.sidebar.radio(
+    "Navigation",
+    [
+        "🧪 Demo Scenarios",
+        "🔍 Custom Login Test",
+        "📘 About Cadence"
+    ]
+)
+
+# -----------------------------
+# Demo Mode
+# -----------------------------
 if mode == "🧪 Demo Scenarios":
-    st.subheader("Choose a Demo")
+
+    st.subheader("Demo Scenarios")
 
     demo = st.selectbox(
         "Select a login attempt",
-        ["Normal Login", "Suspicious Login", "High Risk Login"]
+        [
+            "Normal Login",
+            "Suspicious Login",
+            "High Risk Login"
+        ]
     )
 
     if demo == "Normal Login":
         user, hour, device, location, velocity = "User 1", 9, "iPhone", "Mumbai", False
+
     elif demo == "Suspicious Login":
         user, hour, device, location, velocity = "User 2", 3, "Tablet", "Bangalore", False
+
     else:
         user, hour, device, location, velocity = "User 3", 2, "Unknown Device", "London", True
 
-    score, action, level, reasons = check(user, hour, device, location, velocity)
+    score, action, level, reasons = check(
+        user,
+        hour,
+        device,
+        location,
+        velocity
+    )
 
-    st.info("Sample login details")
+    st.info("Login Session Details")
 
     c1, c2 = st.columns(2)
+
     with c1:
         st.write("**User:**", user)
-        st.write("**Time:**", f"{hour}:00")
+        st.write("**Login Time:**", f"{hour}:00")
         st.write("**Device:**", device)
+
     with c2:
         st.write("**Location:**", location)
-        st.write("**Date & Time:**", datetime.now().strftime("%d-%m-%Y %H:%M"))
+        st.write(
+            "**Timestamp:**",
+            datetime.now().strftime("%d-%m-%Y %H:%M")
+        )
 
     st.divider()
 
     m1, m2, m3 = st.columns(3)
-    m1.metric("Risk Score", f"{score}/100")
+
+    m1.metric("Trust Risk Score", f"{score}/100")
     m2.metric("Risk Level", level)
-    m3.metric("Decision", action)
+    m3.metric("Recommended Action", action)
 
     if reasons:
-        st.warning("Risk factors found:")
+        st.warning("Behavioral anomalies detected")
+
         for r in reasons:
             st.write("-", r)
+
     else:
-        st.success("Everything looks normal. Login can be allowed safely.")
+        st.success(
+            "Behavior matches the user's trusted profile."
+        )
 
+# -----------------------------
+# Custom Test
+# -----------------------------
 elif mode == "🔍 Custom Login Test":
-    st.subheader("Test Your Own Login Scenario")
-    st.write("Change the details below and see how the risk score changes.")
 
-    user = st.selectbox("Select User", list(users.keys()))
-    hour = st.slider("Login Hour", 0, 23, 10)
-    device = st.text_input("Device Name", "iPhone")
-    location = st.text_input("Location", "Mumbai")
-    velocity = st.checkbox("Impossible travel?")
+    st.subheader("Simulate Your Own Login Scenario")
 
-    if st.button("Analyze Login"):
-        score, action, level, reasons = check(user, hour, device, location, velocity)
+    user = st.selectbox(
+        "Select User",
+        list(users.keys())
+    )
+
+    hour = st.slider(
+        "Login Hour",
+        0,
+        23,
+        10
+    )
+
+    device = st.text_input(
+        "Device",
+        "iPhone"
+    )
+
+    location = st.text_input(
+        "Location",
+        "Mumbai"
+    )
+
+    velocity = st.checkbox(
+        "Impossible travel detected?"
+    )
+
+    if st.button("Analyze Session"):
+
+        score, action, level, reasons = check(
+            user,
+            hour,
+            device,
+            location,
+            velocity
+        )
 
         c1, c2, c3 = st.columns(3)
-        c1.metric("Risk Score", f"{score}/100")
-        c2.metric("Risk Level", level)
-        c3.metric("Decision", action)
+
+        c1.metric(
+            "Trust Risk Score",
+            f"{score}/100"
+        )
+
+        c2.metric(
+            "Risk Level",
+            level
+        )
+
+        c3.metric(
+            "Recommended Action",
+            action
+        )
 
         if reasons:
-            st.warning("Why was this login flagged?")
+
+            st.warning(
+                "Behavioral anomalies detected:"
+            )
+
             for r in reasons:
                 st.write("-", r)
-        else:
-            st.success("No unusual behaviour detected.")
 
+        else:
+
+            st.success(
+                "No unusual behavioral signals detected."
+            )
+
+# -----------------------------
+# About
+# -----------------------------
 else:
-    st.subheader("How the System Works")
+
+    st.subheader("About Cadence")
 
     st.info(
-        "The system compares every login attempt with the user's normal behaviour "
-        "and gives a risk score."
+        "Cadence is an AI-powered behavioral intelligence platform that "
+        "continuously evaluates user behavior during a digital session "
+        "to generate a dynamic Trust Score."
     )
 
     st.markdown("""
-- ⏰ Checks login time
-- 📱 Checks device
-- 📍 Checks location
-- ⚡ Checks impossible travel
-- 📊 Calculates a risk score
-- 🔐 Decides whether to Allow, Challenge or Block
+### Behavioral Signals Monitored
+
+- ⏰ Login Time
+- 📱 Device Consistency
+- 📍 Location Patterns
+- ⚡ Impossible Travel Detection
+
+### Decision Engine
+
+Cadence evaluates these behavioral signals to generate a real-time Trust Risk Score and recommends one of three actions:
+
+- ✅ Allow
+- ⚠️ Challenge (Step-up Authentication)
+- ❌ Block
+
+Unlike traditional authentication systems that verify users only during login, Cadence continuously evaluates behavioral trust throughout the session.
 """)
 
-    st.subheader("Risk Score")
+    st.subheader("Risk Score Model")
 
     st.table({
-        "Check": ["Time", "Device", "Location", "Travel"],
-        "Maximum Points": [30, 25, 25, 20]
+        "Behavioral Signal": [
+            "Login Time",
+            "Device",
+            "Location",
+            "Impossible Travel"
+        ],
+        "Maximum Risk Points": [
+            30,
+            25,
+            25,
+            20
+        ]
     })
 
     st.success("""
-0 - 29 : Allow
+0–29 → Allow
 
-30 - 69 : Challenge (OTP)
+30–69 → Challenge
 
-70 - 100 : Block
+70–100 → Block
 """)
 
+# -----------------------------
+# Footer
+# -----------------------------
 st.divider()
-st.caption("PSB Hackathon 2026 • IIT (ISM) Dhanbad")
+
+st.caption(
+    "Cadence MVP • Powered by Behavioral Trust Validator™ • "
+    "ThinkForBharat 1.0 – National Open Innovation Ideathon"
+)
